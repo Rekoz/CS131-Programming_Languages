@@ -1,0 +1,47 @@
+The warmups are easy.
+
+Subset: we just use the operations defined in the
+List module to check if every element in a is also in b.
+
+equal_sets: use subset to check if two sets are subset of each other.
+
+set_union: concatenate two lists, and delete duplicates in them using List.tl.
+
+set_intersection: scan set a, add elements that are also in b using List.mem.
+
+set_diff: scan set a, add elements that are not in b using List.mem.
+
+computed_fixed_point eq f x: recursively calculate new points and check if
+they satisfy the fixed point requirement.
+
+computed_periodic_point eq f p x: recursively calculate new points and check if
+they satisfy the periodic point requirement. Note that an additional check
+function is required since the checking is not so simple as that of fixed
+point.
+
+-------------------------------------------------------------------------------
+
+Now for the big part.
+
+My original idea was to follow the definition, i.e. for every rule, follow the
+grammar chain and see if it can finally reach a terminal rule. The check can
+be done using computed_periodic_point. But what should be the value of p?
+Also, for every nonterminal symbol, we have several rules to choose from. How
+do we know which rule we should choose in order to make it a blind-alley rule?
+It seems that solving the problem this way would incur a lot of trouble, so I
+gave up and came up with another idea.
+
+The new idea is: scan the rules for an indefinite times. Every time we scan the
+rule, we add rules that can be terminated to the terminal_list. For example,
+for the first scan, only rules that contain all terminals are added to the
+terminal_list. Then in the second scan, rules containing only symbols in the
+terminal_list are added to the terminal_list, because although they have
+nonterminals, these nonterminals actually link to terminals. We keep this
+calculation recursively using computed_fixed_point. When the next scan does
+not add any new rule to the terminal_list, the whole process is finished.
+
+Final thoughts: The problem description takes some time to understand, which is
+almost always the professor's style. It is, however, not so hard if you think
+the other way round. Once you figure out the algorithm, it is all about turning
+it into code, which in OCaml is a little bit hard because we have to write
+several recursive functions that call other recursive functions.

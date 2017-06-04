@@ -1,0 +1,27 @@
+For convert_grammar, I just defined another function that accepts the rules
+list and a nonterminal symbol. It looks for all the matching rules with the
+nonterminal symbol and concatenates them all together. When it is called in
+convert_grammar, it is called with only the rules argument, and thus is
+partially implemented. Then when later called with the second argument, it
+will return the corresponding rule_list. This functions the same as the style
+in Homework2.
+
+For parse_prefix, I solved it with mutual recursion. This is because when
+I am considering the problem, I realized that every time a nonterminal is
+encountered, we have to go to another rule list and check all the rules in it.
+For every rule, we need to check its symbols. If the symbol is a nonterminal,
+we need to check the rules corresponding with the nonterminal again. So this
+results in two function constantly calling each other until a solution is
+generated. Then the solution is checked with the acceptor. If it is rejected, 
+we look at other rules remained until all rules are exhausted.
+
+The shortcoming is also obvious: it could potentially run into infinite loop.
+For example, if we make the rule in the awkish_grammar from 
+     | Expr ->
+         [[N Term; N Binop; N Expr];
+          [N Term]]
+to 
+     | Expr ->
+         [[N Expr; N Binop; N Term];
+          [N Term]]
+it will always try the first rule and thus keeps checking Expr forever.
